@@ -1,0 +1,30 @@
+{
+  "name": "expenditure-tracker",
+  "version": "1.0.0",
+  "description": "expenditure-tracker node app for api",
+  "main": "main.js",
+  "scripts": {
+    "start": "cross-env ENVIRONMENT=development nodemon main.js",
+    "start:staging": "cross-env ENVIRONMENT=staging nodemon main.js",
+    "start:prod": "cross-env ENVIRONMENT=production nodemon main.js"
+  },
+  "author": "Vicky Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^14.2.0",
+    "express": "^4.17.2",
+    "helmet": "^5.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.7",
+    "mongoose-autopopulate": "^0.16.0",
+    "morgan": "^1.10.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.15"
+  }
+}
