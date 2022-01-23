@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
       default: null,
     },
     password: {
@@ -19,7 +18,6 @@ const userSchema = new mongoose.Schema(
     },
     number: {
       type: Number,
-      required: true,
       default: null,
     },
     is_active: {
@@ -28,9 +26,11 @@ const userSchema = new mongoose.Schema(
     },
     created_on: {
       type: Date,
+      default: new Date(),
     },
     modified_on: {
       type: Date,
+      default: new Date(),
     },
   },
   {

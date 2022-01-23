@@ -13,3 +13,15 @@ module.exports = generateToken = (user) => {
     }
   );
 };
+
+module.exports = trimInputData = (payload) => {
+  let keys = Object.keys(payload);
+  for (let i = 0; i < keys.length; i++) {
+    if (payload[keys[i]]) {
+      payload[keys[i]] = payload[keys[i]].trim();
+    }
+  }
+  return payload;
+};
+
+module.exports = { generateToken, trimInputData };

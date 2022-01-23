@@ -23,7 +23,8 @@
     "mongoose": "^6.1.7",
     "mongoose-autopopulate": "^0.16.0",
     "morgan": "^1.10.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

@@ -35,4 +35,5 @@ module.exports = {
   NO_RECORD_FOUND: "No record found",
   REFRESHED_SUCCESS: "refreshed successfully",
   PERMALINK_REQUIRED: "permalink is required",
+  ALREADY_EXIST: "alreay exits",
 };

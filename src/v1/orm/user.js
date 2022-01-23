@@ -4,7 +4,7 @@ const CODE = require("../Helper/httpResponseCode");
 const MESSAGE = require("../Helper/httpResponseMessage");
 const bcrypt = require("bcrypt");
 const { serverError } = require("../constants/commonConstants");
-const generateToken = require("../Helper/commonFunction");
+const { generateToken } = require("../Helper/commonFunction");
 
 exports.login = async (req, res, email, password) => {
   logger.info("ORM::login");
@@ -23,13 +23,55 @@ exports.login = async (req, res, email, password) => {
     }
     const token = await generateToken(isUserExist);
     return res.status(CODE.EVERYTHING_IS_OK).send({
-      message: MESSAGE.SUCCESSFULLY_DONE,
-      data: { ...isUserExist, token },
+      message: `User ${MESSAGE.SUCCESSFULLY_DONE}`,
+      data: {
+        _id: isUserExist._id,
+        fullName: isUserExist.fullName,
+        email: isUserExist.email,
+        number: isUserExist.number,
+        is_active: isUserExist.is_active,
+        created_on: isUserExist.created_on,
+        modified_on: isUserExist.modified_on,
+        token,
+      },
     });
   } catch (error) {
     logger.error(error);
     return res
       .status(CODE.INTERNAL_SERVER_ERROR)
-      .send({ message: MESSAGE.serverError });
+      .send({ message: serverError });
+  }
+};
+
+exports.register = async (req, res, payload) => {
+  logger.info("ORM::register");
+  try {
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(payload.password, salt);
+    const userRegisterData = new User({
+      fullName: payload.fullName,
+      email: payload.email,
+      password: hashedPassword,
+      number: payload.number,
+    });
+    const registeredUser = await userRegisterData.save();
+    const token = await generateToken(userRegisterData);
+    return res.status(CODE.NEW_RESOURCE_CREATED).send({
+      message: `User ${MESSAGE.CREATE_SUCCESS}`,
+      data: {
+        _id: registeredUser._id,
+        fullName: registeredUser.fullName,
+        email: registeredUser.email,
+        number: registeredUser.number,
+        is_active: registeredUser.is_active,
+        created_on: registeredUser.created_on,
+        modified_on: registeredUser.modified_on,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+    return res
+      .status(CODE.INTERNAL_SERVER_ERROR)
+      .send({ message: serverError });
   }
 };
