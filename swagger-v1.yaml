@@ -1,0 +1,67 @@
+openapi: 3.0.1
+info:
+  title: Expenditure Tracker API
+  description: Expenditure Tracker API
+  version: 1.0.0
+servers:
+  - url: /api/v1/
+security:
+  - APIKeyHeader: []
+paths:
+  /users/login/:
+    post:
+      tags:
+        - "Auth"
+      summary: "Login User"
+      operationId: "LoginUser"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+  /users/register/:
+    post:
+      tags:
+        - "Auth"
+      summary: "Register User"
+      operationId: "RegsiterUser"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - fullName
+                - email
+                - password
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"

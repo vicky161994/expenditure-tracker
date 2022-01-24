@@ -13,6 +13,15 @@ exports.login = async (req, res) => {
     return res.status(CODE.NOT_FOUND).send({ message: MESSAGE.INVALID_ARGS });
   }
   const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(CODE.NOT_FOUND).send({ message: MESSAGE.INVALID_ARGS });
+  }
+  if (!validator.isEmail(email) && !validator.isMobilePhone(email)) {
+    return res.status(CODE.BAD_REQUEST).send({
+      message: MESSAGE.INVALID_ARGS,
+      type: "email or number",
+    });
+  }
   const trimmedData = await trimInputData({ email, password });
   await UserORM.login(req, res, trimmedData.email, trimmedData.password);
 };
