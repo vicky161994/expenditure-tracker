@@ -1,3 +1,4 @@
 const UserORM = require("./user");
+const GroupORM = require("./group");
 
-module.exports = { UserORM };
+module.exports = { UserORM, GroupORM };

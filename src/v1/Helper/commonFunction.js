@@ -1,4 +1,6 @@
 const JWT = require("jsonwebtoken");
+const { v4: uuidv4 } = require("uuid");
+
 module.exports = generateToken = (user) => {
   return JWT.sign(
     {
@@ -24,4 +26,27 @@ module.exports = trimInputData = (payload) => {
   return payload;
 };
 
-module.exports = { generateToken, trimInputData };
+module.exports = generateUniqueID = () => {
+  const uuid = uuidv4();
+  return uuid;
+};
+
+module.exports = setPageAndLimit = (req) => {
+  let skip = 0;
+  let { page, limit } = req.query;
+  if (!page) {
+    page = 1;
+  }
+  if (!limit) {
+    limit = 10;
+  }
+  skip = (page - 1) * limit;
+  return { skip: parseInt(skip), limit: parseInt(limit) };
+};
+
+module.exports = {
+  generateToken,
+  trimInputData,
+  generateUniqueID,
+  setPageAndLimit,
+};

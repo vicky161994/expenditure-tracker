@@ -1,2 +1,3 @@
 const User = require("./user");
-module.exports = { User };
+const Group = require("./group");
+module.exports = { User, Group };

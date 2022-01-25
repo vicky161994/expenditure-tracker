@@ -5,8 +5,16 @@ info:
   version: 1.0.0
 servers:
   - url: /api/v1/
-security:
-  - APIKeyHeader: []
+components:
+  securitySchemes:
+    bearerAuth: 
+      type: "apiKey"
+      description: |
+        Bearer \<token\>
+        <br/>OR<br/>
+      name: "authorization"
+      scheme: "bearer"
+      in: "header"
 paths:
   /users/login/:
     post:
@@ -65,3 +73,123 @@ paths:
           description: "Invalid"
         "404":
           description: "Not Found"
+  /groups:
+    post:
+      tags:
+        - "Group"
+      summary: "Create Group"
+      operationId: "CreateGroup"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters:
+        - name: authorization 
+          in: header
+          required: true
+          schema: 
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+    get:
+      tags:
+        - "Group"
+      summary: "Fetch Group List with pagination"
+      operationId: "group-list"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters:
+        - in: header
+          name: authorization 
+          required: true 
+          schema: 
+            type: string
+        - name: page
+          in: query
+          schema: 
+            type: number
+        - name: limit
+          in: query
+          schema: 
+            type: number
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"    
+  "/groups/{groupId}/":
+    get:
+      tags:
+        - "Group"
+      summary: "Fetch Group detail based on ID"
+      operationId: "group-detail"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters: 
+        - in: header
+          name: authorization 
+          required: true 
+          schema: 
+            type: string
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+    delete:
+      tags:
+        - "Group"
+      summary: "delete group name based on ID"
+      operationId: "delete-group"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters: 
+        - in: header
+          name: authorization  
+          required: true
+          schema: 
+            type: string
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+
