@@ -6,7 +6,8 @@
   "scripts": {
     "start": "cross-env ENVIRONMENT=development nodemon main.js",
     "start:staging": "cross-env ENVIRONMENT=staging nodemon main.js",
-    "start:prod": "cross-env ENVIRONMENT=production nodemon main.js"
+    "start:prod": "cross-env ENVIRONMENT=production nodemon main.js",
+    "test": "cross-env ENVIRONMENT=test jest"
   },
   "author": "Vicky Kumar",
   "license": "ISC",
@@ -30,6 +31,8 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "nodemon": "^2.0.15"
+    "jest": "^27.4.7",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.2.2"
   }
 }

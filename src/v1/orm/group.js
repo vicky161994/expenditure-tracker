@@ -16,7 +16,7 @@ exports.createGroup = async (req, res, payload) => {
       is_active: true,
     });
     const savedResponse = await groupData.save();
-    return res.status(CODE.EVERYTHING_IS_OK).send({
+    return res.status(CODE.NEW_RESOURCE_CREATED).send({
       message: MESSAGE.CREATE_SUCCESS,
       data: savedResponse,
     });
