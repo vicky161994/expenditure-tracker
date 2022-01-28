@@ -193,3 +193,163 @@ paths:
         "404":
           description: "Not Found"
 
+  /items:
+    post:
+      tags:
+        - "Item"
+      summary: "Create Item"
+      operationId: "create-item"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters:
+        - name: authorization 
+          in: header
+          required: true
+          schema: 
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                unit:
+                  type: string
+                groupId:
+                  type: string
+              required:
+                - name
+                - unit
+                - groupId
+      responses:
+        "201":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+    get:
+      tags:
+        - "Item"
+      summary: "Fetch Item List"
+      operationId: "item-list"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters:
+        - in: header
+          name: authorization 
+          required: true 
+          schema: 
+            type: string
+        - name: groupId
+          in: query
+          schema: 
+            type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"    
+  "/items/{itemId}/":
+    get:
+      tags:
+        - "Item"
+      summary: "Fetch item detail based on ID"
+      operationId: "item-detail"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters: 
+        - in: header
+          name: authorization 
+          required: true 
+          schema: 
+            type: string
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+    delete:
+      tags:
+        - "Item"
+      summary: "delete item based on ID"
+      operationId: "delete-item"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters: 
+        - in: header
+          name: authorization  
+          required: true
+          schema: 
+            type: string
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+    post:
+      tags:
+        - "Item"
+      summary: "update item details based on ID"
+      operationId: "update-item"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters: 
+        - in: header
+          name: authorization  
+          required: true
+          schema: 
+            type: string
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                unit:
+                  type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+

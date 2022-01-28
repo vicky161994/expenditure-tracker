@@ -15,6 +15,8 @@ exports.monthsInWords = [
 
 exports.userPopulateFields = "fullName email number";
 
+exports.groupPopulateFields = "name group_id";
+
 exports.errorMessage = "Please provide correct input";
 
 exports.notAuthorizedMessage = "Not Authorized";

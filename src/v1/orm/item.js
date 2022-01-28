@@ -1,21 +1,21 @@
 const logger = require("../utils/logger");
-const { User, Group } = require("../models");
+const { Item } = require("../models");
 const CODE = require("../Helper/httpResponseCode");
 const MESSAGE = require("../Helper/httpResponseMessage");
-const { serverError, limit } = require("../constants/commonConstants");
-const { generateUniqueID } = require("../Helper/commonFunction");
-const { userPopulate } = require("../constants/populate");
+const { serverError } = require("../constants/commonConstants");
+const { groupPopulate, userPopulate } = require("../constants/populate");
 
-exports.createGroup = async (req, res, payload) => {
-  logger.info("ORM::Group");
+exports.createItem = async (req, res, payload) => {
+  logger.info("ORM::CreateItem");
   try {
-    const groupData = new Group({
+    const itemData = new Item({
       name: payload.name,
-      group_id: generateUniqueID(),
+      groupId: payload.groupId,
+      unit: payload.unit,
       createdBy: req.user._id,
       is_active: true,
     });
-    const savedResponse = await groupData.save();
+    const savedResponse = await itemData.save();
     return res.status(CODE.NEW_RESOURCE_CREATED).send({
       message: MESSAGE.CREATE_SUCCESS,
       data: savedResponse,
@@ -28,21 +28,42 @@ exports.createGroup = async (req, res, payload) => {
   }
 };
 
-exports.getAllGroup = async (req, res, skip, limit) => {
-  logger.info("ORM::getAllGroup");
+exports.getAllItems = async (req, res, groupId) => {
+  logger.info("ORM::getAllItems");
   try {
-    const groupList = await Group.find({
+    const itemList = await Item.find({
       is_active: true,
+      groupId: groupId,
       createdBy: req.user._id,
     })
-      .sort({ created_on: -1 })
-      .skip(skip)
-      .limit(limit)
+      .populate(groupPopulate)
+      .populate(userPopulate)
       .lean()
+      .sort({ name: 1 });
+    return res.status(CODE.EVERYTHING_IS_OK).send({
+      message: MESSAGE.SUCCESSFULLY_DONE,
+      data: itemList,
+    });
+  } catch (error) {
+    logger.error(error);
+    return res
+      .status(CODE.INTERNAL_SERVER_ERROR)
+      .send({ message: serverError });
+  }
+};
+
+exports.getItemById = async (req, res, itemId) => {
+  logger.info("ORM::getItemById");
+  try {
+    const itemData = await Item.find({
+      _id: itemId,
+      is_active: true,
+    })
+      .populate(groupPopulate)
       .populate(userPopulate);
     return res.status(CODE.EVERYTHING_IS_OK).send({
       message: MESSAGE.SUCCESSFULLY_DONE,
-      data: groupList,
+      data: itemData,
     });
   } catch (error) {
     logger.error(error);
@@ -52,16 +73,12 @@ exports.getAllGroup = async (req, res, skip, limit) => {
   }
 };
 
-exports.getGroupById = async (req, res, groupId) => {
-  logger.info("ORM::getGroupById");
+exports.updateItem = async (req, res, itemId, payload) => {
+  logger.info("ORM::updateItem");
   try {
-    const groupData = await Group.find({
-      _id: groupId,
-      is_active: true,
-    }).populate(userPopulate);
+    await Item.findByIdAndUpdate(itemId, payload);
     return res.status(CODE.EVERYTHING_IS_OK).send({
       message: MESSAGE.SUCCESSFULLY_DONE,
-      data: groupData,
     });
   } catch (error) {
     logger.error(error);
@@ -71,10 +88,10 @@ exports.getGroupById = async (req, res, groupId) => {
   }
 };
 
-exports.deleteGroup = async (req, res, groupId) => {
-  logger.info("ORM::deleteGroup");
+exports.deleteItem = async (req, res, itemId) => {
+  logger.info("ORM::deleteItem");
   try {
-    await Group.findByIdAndUpdate(groupId, {
+    await Item.findByIdAndUpdate(itemId, {
       is_active: false,
     });
     return res.status(CODE.EVERYTHING_IS_OK).send({

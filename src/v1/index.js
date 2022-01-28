@@ -19,6 +19,7 @@ app.get("/*", (req, res, next) => {
 
 app.use("/users", routes.User);
 app.use("/groups", routes.Group);
+app.use("/items", routes.Item);
 // request to handle undefined or all other routes
 app.get("*", (req, res) => {
   logger.info("users route");

@@ -18,8 +18,13 @@ exports.group = {
   collection: "groups",
 };
 
+exports.purchaseItem = {
+  model: "purchase_item",
+  collection: "purchase_items",
+};
+
 exports.item = {
-  model: "items",
+  model: "item",
   collection: "items",
 };
 
