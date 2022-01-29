@@ -1,6 +1,7 @@
 const {
   userPopulateFields,
   groupPopulateFields,
+  itemPopulateFields,
 } = require("./commonConstants");
 
 const userPopulate = {
@@ -13,7 +14,13 @@ const groupPopulate = {
   select: groupPopulateFields,
 };
 
+const itemPopulate = {
+  path: "name",
+  select: itemPopulateFields,
+};
+
 module.exports = {
   userPopulate,
   groupPopulate,
+  itemPopulate,
 };
