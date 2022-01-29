@@ -4,13 +4,19 @@ const { connectWithRetry } = require("../../../common/config/mongoose.service");
 const { loginTestUser } = require("../../utils/loginTestUser");
 const mongoose = require("mongoose");
 
-describe("Testing the gorup module API", () => {
-  const endpoint = "/api/v1/groups";
+describe("Testing the item module API", () => {
+  const endpoint = "/api/v1/items";
   let groupData = {
-    name: "Testing Group",
+    name: "Abc",
+    unit: "abc",
+    groupId: "61efc1ed602a0a1f145c16f6",
+  };
+  let updateData = {
+    name: "MNO",
+    unit: "mno",
   };
   let token,
-    groupId,
+    itemId,
     page = 1,
     limit = 10;
   beforeAll(async () => {
@@ -22,39 +28,47 @@ describe("Testing the gorup module API", () => {
     // mongoose.connection.close();
   });
 
-  it("should create a new group", async () => {
+  it("should create a new item", async () => {
     const response = await request(app)
       .post(`${endpoint}`)
       .set("Authorization", `Bearer ${token}`)
       .send(groupData);
     expect(response.status).toEqual(201);
-    groupId = response.body !== undefined ? response.body.data._id : undefined;
+    itemId = response.body !== undefined ? response.body.data._id : undefined;
   });
 
-  it("should fetch list of group with status 200", async () => {
+  it("should fetch list of item with status 200", async () => {
     const response = await request(app)
-      .get(`${endpoint}`)
+      .get(`${endpoint}?groupId=${groupData.groupId}`)
       .set("Authorization", `Bearer ${token}`);
     expect(response.status).toEqual(200);
   });
 
-  it("should fetch list of group", async () => {
+  it("should fetch list of item", async () => {
     const response = await request(app)
-      .get(`${endpoint}`)
+      .get(`${endpoint}?groupId=${groupData.groupId}`)
       .set("Authorization", `Bearer ${token}`);
     expect(response.body.data.length).toBeGreaterThanOrEqual(0);
   });
 
-  it("should fetch group detail based on id", async () => {
+  it("should fetch item detail based on id", async () => {
     const response = await request(app)
-      .get(`${endpoint}/${groupId}`)
+      .get(`${endpoint}/${itemId}`)
       .set("Authorization", `Bearer ${token}`);
     expect(response.body.data.length).toEqual(1);
   });
 
-  it("delete group based on id", async () => {
+  it("should update an item", async () => {
     const response = await request(app)
-      .delete(`${endpoint}/${groupId}`)
+      .post(`${endpoint}/${itemId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send(updateData);
+    expect(response.status).toEqual(200);
+  });
+
+  it("delete item based on id", async () => {
+    const response = await request(app)
+      .delete(`${endpoint}/${itemId}`)
       .set("Authorization", `Bearer ${token}`);
     expect(response.status).toEqual(200);
   });
