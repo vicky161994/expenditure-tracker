@@ -12,8 +12,13 @@ exports.createPurchaseItem = async (req, res, payload) => {
   try {
     logger.info("ORM::Purchase-Item");
     const savedData = await payload.save();
+    await PurchaseItem.updateOne(
+      { _id: savedData._id },
+      { $addToSet: { users: req.user._id } }
+    );
     return res.status(CODE.NEW_RESOURCE_CREATED).send({
       message: `Purchase item ${MESSAGE.CREATE_SUCCESS}`,
+      data: savedData,
     });
   } catch (error) {
     logger.error(error);

@@ -4,7 +4,7 @@ info:
   description: Expenditure Tracker API
   version: 1.0.0
 servers:
-  - url: /api/v1/
+  - url: localhost:6002/api/v1
 components:
   securitySchemes:
     bearerAuth: 
@@ -287,33 +287,6 @@ paths:
           description: "Invalid"
         "404":
           description: "Not Found"
-    delete:
-      tags:
-        - "Item"
-      summary: "delete item based on ID"
-      operationId: "delete-item"
-      security:
-        - bearerAuth:
-          type: "http"
-          scheme: "bearer"
-      parameters: 
-        - in: header
-          name: authorization  
-          required: true
-          schema: 
-            type: string
-        - name: itemId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: "Invalid"
-        "404":
-          description: "Not Found"
     post:
       tags:
         - "Item"
@@ -352,4 +325,206 @@ paths:
           description: "Invalid"
         "404":
           description: "Not Found"
-
+    delete:
+      tags:
+        - "Item"
+      summary: "delete item based on ID"
+      operationId: "delete-item"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters: 
+        - in: header
+          name: authorization  
+          required: true
+          schema: 
+            type: string
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+  /purchase-item:
+    post:
+      tags:
+        - "Purchase Item"
+      summary: "Create purchase Item"
+      operationId: "create-purchase-item"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters:
+        - name: authorization 
+          in: header
+          required: true
+          schema: 
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                purchaseDate:
+                  type: string
+                purchaseItem:
+                  type: string
+                units:
+                  type: string
+                totalCost:
+                  type: string
+                billAvailable:
+                  type: boolean
+                groupId:
+                  type: string
+              required:
+                - purchaseDate
+                - purchaseItem
+                - units
+                - totalCost
+                - billAvailable
+                - groupId
+      responses:
+        "201":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+    get:
+      tags:
+        - "Purchase Item"
+      summary: "Fetch purchase Item List"
+      operationId: "purchase-item-list"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters:
+        - in: header
+          name: authorization 
+          required: true 
+          schema: 
+            type: string
+        - name: groupId
+          in: query
+          schema: 
+            type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found" 
+  "/purchase-item/{itemId}/":
+    get:
+      tags:
+        - "Purchase Item"
+      summary: "Fetch purchase item detail based on ID"
+      operationId: "purchase-item-detail"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters: 
+        - in: header
+          name: authorization 
+          required: true 
+          schema: 
+            type: string
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+    post:
+      tags:
+        - "Purchase Item"
+      summary: "update purchase item details based on ID"
+      operationId: "update-purchase-item"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters: 
+        - in: header
+          name: authorization  
+          required: true
+          schema: 
+            type: string
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                purchaseDate:
+                  type: string
+                purchaseItem:
+                  type: string
+                units:
+                  type: string
+                totalCost:
+                  type: string
+                billAvailable:
+                  type: string
+                groupId:
+                  type: string                
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
+    delete:
+      tags:
+        - "Purchase Item"
+      summary: "delete purchase item based on ID"
+      operationId: "delete-purchase-item"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters: 
+        - in: header
+          name: authorization  
+          required: true
+          schema: 
+            type: string
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"

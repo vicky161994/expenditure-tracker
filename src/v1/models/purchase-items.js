@@ -17,6 +17,13 @@ const purchaseItemSchema = new mongoose.Schema(
       ref: user.model,
       default: null,
     },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: user.model,
+        default: [],
+      },
+    ],
     units: {
       type: String,
       ref: user.model,

@@ -16,6 +16,10 @@ exports.createItem = async (req, res, payload) => {
       is_active: true,
     });
     const savedResponse = await itemData.save();
+    await itemData.updateOne(
+      { _id: savedResponse._id },
+      { $addToSet: { users: req.user._id } }
+    );
     return res.status(CODE.NEW_RESOURCE_CREATED).send({
       message: MESSAGE.CREATE_SUCCESS,
       data: savedResponse,
@@ -34,7 +38,7 @@ exports.getAllItems = async (req, res, groupId) => {
     const itemList = await Item.find({
       is_active: true,
       groupId: groupId,
-      createdBy: req.user._id,
+      users: { $in: [req.user._id] },
     })
       .populate(groupPopulate)
       .populate(userPopulate)

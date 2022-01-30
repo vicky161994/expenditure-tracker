@@ -11,12 +11,18 @@ const groupSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: user.model,
       default: null,
     },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: user.model,
+        default: [],
+      },
+    ],
     is_active: {
       type: Boolean,
       default: true,

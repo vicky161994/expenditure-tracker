@@ -16,6 +16,10 @@ exports.createGroup = async (req, res, payload) => {
       is_active: true,
     });
     const savedResponse = await groupData.save();
+    await itemData.updateOne(
+      { _id: savedResponse._id },
+      { $addToSet: { users: req.user._id } }
+    );
     return res.status(CODE.NEW_RESOURCE_CREATED).send({
       message: MESSAGE.CREATE_SUCCESS,
       data: savedResponse,
@@ -33,7 +37,7 @@ exports.getAllGroup = async (req, res, skip, limit) => {
   try {
     const groupList = await Group.find({
       is_active: true,
-      createdBy: req.user._id,
+      users: { $in: [req.user._id] },
     })
       .sort({ created_on: -1 })
       .skip(skip)

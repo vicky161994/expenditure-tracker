@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-mongoose.set("debug", true);
+mongoose.set("debug", false);
 let count = 0;
 let db_url =
   "mongodb://" +

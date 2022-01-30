@@ -20,6 +20,13 @@ const itemSchema = new mongoose.Schema(
       ref: user.model,
       default: null,
     },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: user.model,
+        default: [],
+      },
+    ],
     is_active: {
       type: Boolean,
       default: true,

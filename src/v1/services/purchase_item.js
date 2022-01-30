@@ -73,7 +73,7 @@ exports.getAllPurchaseItem = async (req, res) => {
     filter = {
       groupId: mongoose.Types.ObjectId(groupId),
       is_active: true,
-      createdBy: req.user._id,
+      users: { $in: [req.user._id] },
     };
     if (purchaseStartDate) {
       filter.purchased_on = `$gte: ${new Date(purchaseStartDate)}`;
@@ -97,7 +97,7 @@ exports.getAllPurchaseItem = async (req, res) => {
     }
     await PurchaseItemORM.getAllPurchaseItems(req, res, filter, sortBy);
   } catch (error) {
-    log.error(error);
+    logger.error(error);
     return res
       .status(CODE.INTERNAL_SERVER_ERROR)
       .send({ message: MESSAGE.INTERNAL_SERVER_ERROR });
@@ -110,7 +110,7 @@ exports.getPurchaseItemById = async (req, res) => {
     itemId = mongoose.Types.ObjectId(itemId);
     await PurchaseItemORM.getPurchaseItemById(req, res, itemId);
   } catch (error) {
-    log.error(error);
+    logger.error(error);
     return res
       .status(CODE.INTERNAL_SERVER_ERROR)
       .send({ message: MESSAGE.INTERNAL_SERVER_ERROR });
@@ -153,7 +153,7 @@ exports.updatePuchaseItem = async (req, res) => {
     }
     await PurchaseItemORM.updatePurchaseItem(req, res, itemId, updateData);
   } catch (error) {
-    log.error(error);
+    logger.error(error);
     return res
       .status(CODE.INTERNAL_SERVER_ERROR)
       .send({ message: MESSAGE.INTERNAL_SERVER_ERROR });
@@ -169,7 +169,7 @@ exports.deletePurchaseItem = async (req, res) => {
     }
     await PurchaseItemORM.deletePurchaseItem(req, res, itemId);
   } catch (error) {
-    log.error(error);
+    logger.error(error);
     return res
       .status(CODE.INTERNAL_SERVER_ERROR)
       .send({ message: MESSAGE.INTERNAL_SERVER_ERROR });
