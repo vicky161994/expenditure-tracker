@@ -4,7 +4,7 @@ const { connectWithRetry } = require("../../../common/config/mongoose.service");
 const { loginTestUser } = require("../../utils/loginTestUser");
 const mongoose = require("mongoose");
 
-describe("Testing the gorup module API", () => {
+describe("Testing the group module API", () => {
   const endpoint = "/api/v1/groups";
   let groupData = {
     name: "Testing Group",
@@ -50,6 +50,14 @@ describe("Testing the gorup module API", () => {
       .get(`${endpoint}/${groupId}`)
       .set("Authorization", `Bearer ${token}`);
     expect(response.body.data.length).toEqual(1);
+  });
+
+  it("should join a new group", async () => {
+    const response = await request(app)
+      .post(`${endpoint}/join-group`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ groupId });
+    expect(response.status).toEqual(200);
   });
 
   it("delete group based on id", async () => {

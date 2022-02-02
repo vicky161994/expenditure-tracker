@@ -192,6 +192,40 @@ paths:
           description: "Invalid"
         "404":
           description: "Not Found"
+  /groups/join-group:
+    post:
+      tags:
+        - "Group"
+      summary: "Join Group"
+      operationId: "join-group"
+      security:
+        - bearerAuth:
+          type: "http"
+          scheme: "bearer"
+      parameters:
+        - name: authorization 
+          in: header
+          required: true
+          schema: 
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                groupId:
+                  type: string
+              required:
+                - groupId
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: "Invalid"
+        "404":
+          description: "Not Found"
 
   /items:
     post:

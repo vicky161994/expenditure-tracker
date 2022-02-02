@@ -2,7 +2,7 @@ const logger = require("../utils/logger");
 const { User, Group } = require("../models");
 const CODE = require("../Helper/httpResponseCode");
 const MESSAGE = require("../Helper/httpResponseMessage");
-const { serverError, limit } = require("../constants/commonConstants");
+const { serverError } = require("../constants/commonConstants");
 const { generateUniqueID } = require("../Helper/commonFunction");
 const { userPopulate } = require("../constants/populate");
 
@@ -16,7 +16,7 @@ exports.createGroup = async (req, res, payload) => {
       is_active: true,
     });
     const savedResponse = await groupData.save();
-    await itemData.updateOne(
+    await Group.updateOne(
       { _id: savedResponse._id },
       { $addToSet: { users: req.user._id } }
     );
