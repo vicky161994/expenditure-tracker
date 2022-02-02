@@ -31,8 +31,17 @@ exports.createGroup = async (req, res) => {
 exports.getAllGroup = async (req, res) => {
   logger.info("Service::getAllGroup");
   try {
+    let filter = {
+      is_active: true,
+    };
     const { skip, limit } = await setPageAndLimit(req);
-    await GroupORM.getAllGroup(req, res, skip, limit);
+    const searchString = req.query.search;
+    if (searchString) {
+      filter.name = { $regex: ".*" + searchString + ".*", $options: "i" };
+    } else {
+      filter.users = { $in: [req.user._id] };
+    }
+    await GroupORM.getAllGroup(req, res, skip, limit, filter);
   } catch (error) {
     logger.error(error);
     return res
@@ -70,5 +79,24 @@ exports.deleteGroup = async (req, res) => {
     return res
       .status(CODE.INTERNAL_SERVER_ERROR)
       .send({ message: MESSAGE.serverError });
+  }
+};
+
+exports.joinGroup = async (req, res) => {
+  try {
+    logger.info("Service::joinGroup");
+    if (_.isEmpty(req.body)) {
+      return res.status(CODE.NOT_FOUND).send({ message: MESSAGE.INVALID_ARGS });
+    }
+    let { groupId } = req.body;
+    if (!groupId) {
+      return res.status(CODE.NOT_FOUND).send({ message: MESSAGE.INVALID_ARGS });
+    }
+    await GroupORM.joinGroup(req, res, groupId);
+  } catch (error) {
+    log.error(error);
+    return res
+      .status(CODE.INTERNAL_SERVER_ERROR)
+      .send({ message: MESSAGE.INTERNAL_SERVER_ERROR });
   }
 };

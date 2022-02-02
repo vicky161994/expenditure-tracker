@@ -1,5 +1,5 @@
 const logger = require("../utils/logger");
-const { User } = require("../models");
+const { User, Invitation, PurchaseItem, Group, Item } = require("../models");
 const CODE = require("../Helper/httpResponseCode");
 const MESSAGE = require("../Helper/httpResponseMessage");
 const bcrypt = require("bcrypt");
@@ -55,7 +55,6 @@ exports.register = async (req, res, payload) => {
       number: payload.number,
     });
     const registeredUser = await userRegisterData.save();
-    const token = await generateToken(userRegisterData);
     return res.status(CODE.NEW_RESOURCE_CREATED).send({
       message: `User ${MESSAGE.CREATE_SUCCESS}`,
       data: {

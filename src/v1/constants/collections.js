@@ -29,7 +29,7 @@ exports.item = {
 };
 
 exports.invitation = {
-  model: "invitations",
+  model: "invitation",
   collection: "invitations",
 };
 

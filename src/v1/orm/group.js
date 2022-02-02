@@ -32,13 +32,10 @@ exports.createGroup = async (req, res, payload) => {
   }
 };
 
-exports.getAllGroup = async (req, res, skip, limit) => {
+exports.getAllGroup = async (req, res, skip, limit, filter) => {
   logger.info("ORM::getAllGroup");
   try {
-    const groupList = await Group.find({
-      is_active: true,
-      users: { $in: [req.user._id] },
-    })
+    const groupList = await Group.find(filter)
       .sort({ created_on: -1 })
       .skip(skip)
       .limit(limit)
@@ -89,5 +86,22 @@ exports.deleteGroup = async (req, res, groupId) => {
     return res
       .status(CODE.INTERNAL_SERVER_ERROR)
       .send({ message: serverError });
+  }
+};
+
+exports.joinGroup = async (req, res, groupId) => {
+  try {
+    await Group.updateOne(
+      { _id: groupId },
+      { $addToSet: { users: req.user._id } }
+    );
+    return res
+      .status(CODE.EVERYTHING_IS_OK)
+      .send({ message: MESSAGE.SUCCESSFULLY_DONE });
+  } catch (error) {
+    logger.error(error);
+    return res
+      .status(CODE.INTERNAL_SERVER_ERROR)
+      .send({ message: MESSAGE.INTERNAL_SERVER_ERROR });
   }
 };
