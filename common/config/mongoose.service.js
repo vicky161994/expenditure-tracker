@@ -16,18 +16,14 @@ if (
   process.env.ENVIRONMENT == "preprod"
 ) {
   db_url =
-    "mongodb://" +
+    "mongodb+srv://" +
     process.env.MONGO_USERNAME +
     ":" +
     process.env.MONGO_PASSWORD +
     "@" +
     process.env.MONGO_DB_URL +
     "/" +
-    process.env.MONGO_DB_NAME +
-    "?replicaSet=" +
-    process.env.REPLICA_SET_NAME +
-    "&readPreference=" +
-    process.env.MONGO_DB_READ_PREFERENCE;
+    process.env.MONGO_DB_NAME;
 }
 let options = {
   autoIndex: false, // Don't build indexes,
