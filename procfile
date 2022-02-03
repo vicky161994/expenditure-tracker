@@ -1,2 +1,0 @@
-web:cross-env ENVIRONMENT=staging node main.js
-heroku config:set ENVIRONMENT=staging

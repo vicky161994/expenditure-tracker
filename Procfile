@@ -1,0 +1,1 @@
+web:cross-env ENVIRONMENT=staging node main.js
