@@ -1,5 +1,5 @@
 const logger = require("../utils/logger");
-const { User, Invitation, PurchaseItem, Group, Item } = require("../models");
+const { User } = require("../models");
 const CODE = require("../Helper/httpResponseCode");
 const MESSAGE = require("../Helper/httpResponseMessage");
 const bcrypt = require("bcrypt");
@@ -9,7 +9,9 @@ const { generateToken } = require("../Helper/commonFunction");
 exports.login = async (req, res, email, password) => {
   logger.info("ORM::login");
   try {
-    const isUserExist = await User.findOne({ email });
+    const isUserExist = await User.findOne({
+      $or: [{ email: { $eq: email } }, { number: { $eq: parseInt(email) } }],
+    });
     if (!isUserExist) {
       return res
         .status(CODE.NOT_FOUND)
