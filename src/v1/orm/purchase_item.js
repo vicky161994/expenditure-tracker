@@ -28,7 +28,14 @@ exports.createPurchaseItem = async (req, res, payload) => {
   }
 };
 
-exports.getAllPurchaseItems = async (req, res, filter = {}, sortBy) => {
+exports.getAllPurchaseItems = async (
+  req,
+  res,
+  filter = {},
+  sortBy,
+  skip,
+  limit
+) => {
   logger.info("ORM::getAllPurchaseItems");
   try {
     const itemList = await PurchaseItem.find(filter)
@@ -36,10 +43,14 @@ exports.getAllPurchaseItems = async (req, res, filter = {}, sortBy) => {
       .populate(userPopulate)
       .populate(itemPopulate)
       .lean()
-      .sort(sortBy);
+      .sort(sortBy)
+      .skip(skip)
+      .limit(10);
+    const totalPurchaseItem = await PurchaseItem.find(filter).countDocuments();
     return res.status(CODE.EVERYTHING_IS_OK).send({
       message: MESSAGE.SUCCESSFULLY_DONE,
       data: itemList,
+      totalPurchaseItem: totalPurchaseItem,
     });
   } catch (error) {
     logger.error(error);

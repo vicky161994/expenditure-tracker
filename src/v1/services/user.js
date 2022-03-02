@@ -6,6 +6,7 @@ const { UserORM } = require("../orm");
 const validator = require("validator");
 const { User } = require("../models");
 const { trimInputData } = require("../Helper/commonFunction");
+const mongoose = require("mongoose");
 
 exports.login = async (req, res) => {
   logger.info("services::login");
@@ -57,6 +58,23 @@ exports.register = async (req, res) => {
       number,
     });
     return await UserORM.register(req, res, trimmedData);
+  } catch (error) {
+    logger.error(error);
+    return res
+      .status(CODE.INTERNAL_SERVER_ERROR)
+      .send({ message: MESSAGE.serverError });
+  }
+};
+
+exports.getUserList = async (req, res) => {
+  logger.info("Service::getUserList");
+  try {
+    let { groupId } = req.query;
+    if (!groupId) {
+      return res.status(CODE.NOT_FOUND).send({ message: MESSAGE.INVALID_ARGS });
+    }
+    groupId = mongoose.Types.ObjectId(groupId);
+    await UserORM.getUserList(req, res, { groupId });
   } catch (error) {
     logger.error(error);
     return res

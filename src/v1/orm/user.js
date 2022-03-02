@@ -1,5 +1,5 @@
 const logger = require("../utils/logger");
-const { User } = require("../models");
+const { User, PurchaseItem } = require("../models");
 const CODE = require("../Helper/httpResponseCode");
 const MESSAGE = require("../Helper/httpResponseMessage");
 const bcrypt = require("bcrypt");
@@ -68,6 +68,28 @@ exports.register = async (req, res, payload) => {
         created_on: registeredUser.created_on,
         modified_on: registeredUser.modified_on,
       },
+    });
+  } catch (error) {
+    logger.error(error);
+    return res
+      .status(CODE.INTERNAL_SERVER_ERROR)
+      .send({ message: serverError });
+  }
+};
+
+exports.getUserList = async (req, res, filter) => {
+  logger.info("ORM::getUserList");
+  try {
+    const userListID = await PurchaseItem.distinct("createdBy", {
+      groupId: filter.groupId,
+    });
+    const userList = await User.find(
+      { _id: { $in: userListID } },
+      { password: 0, __v: 0 }
+    );
+    return res.status(CODE.EVERYTHING_IS_OK).send({
+      message: `User list ${MESSAGE.FETCH_SUCCESS}`,
+      data: userList,
     });
   } catch (error) {
     logger.error(error);

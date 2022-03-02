@@ -41,9 +41,11 @@ exports.getAllGroup = async (req, res, skip, limit, filter) => {
       .limit(limit)
       .lean()
       .populate(userPopulate);
+    const totalGroups = await Group.find(filter).countDocuments();
     return res.status(CODE.EVERYTHING_IS_OK).send({
       message: MESSAGE.SUCCESSFULLY_DONE,
       data: groupList,
+      totalGroups: totalGroups,
     });
   } catch (error) {
     logger.error(error);
@@ -90,11 +92,27 @@ exports.deleteGroup = async (req, res, groupId) => {
 };
 
 exports.joinGroup = async (req, res, groupId) => {
+  logger.info("ORM::joinGroup");
   try {
     await Group.updateOne(
       { _id: groupId },
       { $addToSet: { users: req.user._id } }
     );
+    return res
+      .status(CODE.EVERYTHING_IS_OK)
+      .send({ message: MESSAGE.SUCCESSFULLY_DONE });
+  } catch (error) {
+    logger.error(error);
+    return res
+      .status(CODE.INTERNAL_SERVER_ERROR)
+      .send({ message: MESSAGE.INTERNAL_SERVER_ERROR });
+  }
+};
+
+exports.removeGroup = async (req, res, groupId) => {
+  logger.info("ORM::removeGroup");
+  try {
+    await Group.updateOne({ _id: groupId }, { $pull: { users: req.user._id } });
     return res
       .status(CODE.EVERYTHING_IS_OK)
       .send({ message: MESSAGE.SUCCESSFULLY_DONE });

@@ -4,7 +4,7 @@
   "description": "expenditure-tracker node app for api",
   "main": "main.js",
   "scripts": {
-    "dev": "cross-env ENVIRONMENT=development node main.js",
+    "dev": "cross-env ENVIRONMENT=development nodemon main.js",
     "start": "cross-env ENVIRONMENT=staging node main.js",
     "start:prod": "cross-env ENVIRONMENT=production node main.js",
     "test": "cross-env ENVIRONMENT=test jest"

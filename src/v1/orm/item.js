@@ -38,7 +38,7 @@ exports.getAllItems = async (req, res, groupId) => {
     const itemList = await Item.find({
       is_active: true,
       groupId: groupId,
-      users: { $in: [req.user._id] },
+      // users: { $in: [req.user._id] },
     })
       .populate(groupPopulate)
       .populate(userPopulate)

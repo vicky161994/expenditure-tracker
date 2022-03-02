@@ -88,11 +88,32 @@ exports.joinGroup = async (req, res) => {
     if (_.isEmpty(req.body)) {
       return res.status(CODE.NOT_FOUND).send({ message: MESSAGE.INVALID_ARGS });
     }
+    console.log(req.body);
     let { groupId } = req.body;
     if (!groupId) {
       return res.status(CODE.NOT_FOUND).send({ message: MESSAGE.INVALID_ARGS });
     }
     await GroupORM.joinGroup(req, res, groupId);
+  } catch (error) {
+    log.error(error);
+    return res
+      .status(CODE.INTERNAL_SERVER_ERROR)
+      .send({ message: MESSAGE.INTERNAL_SERVER_ERROR });
+  }
+};
+
+exports.removeGroup = async (req, res) => {
+  try {
+    logger.info("Service::removeGroup");
+    console.log(req.body);
+    if (_.isEmpty(req.body)) {
+      return res.status(CODE.NOT_FOUND).send({ message: MESSAGE.INVALID_ARGS });
+    }
+    let { groupId } = req.body;
+    if (!groupId) {
+      return res.status(CODE.NOT_FOUND).send({ message: MESSAGE.INVALID_ARGS });
+    }
+    await GroupORM.removeGroup(req, res, groupId);
   } catch (error) {
     log.error(error);
     return res

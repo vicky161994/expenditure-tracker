@@ -43,7 +43,7 @@ exports.createPurchaseItem = async (req, res) => {
       units: trimmedData.units,
       totalCost: trimmedData.totalCost,
       purchased_on: new Date(trimmedData.purchaseDate),
-      bill_available: trimmedData.billAvailable,
+      bill_available: billAvailable,
     });
     await PurchaseItemORM.createPurchaseItem(req, res, dataForSave);
   } catch (error) {
@@ -58,6 +58,7 @@ exports.getAllPurchaseItem = async (req, res) => {
   try {
     logger.info("Service::getAllPurchaseItem");
     let sortBy = {};
+    let dateRange;
     const {
       groupId,
       purchaseStartDate,
@@ -65,6 +66,8 @@ exports.getAllPurchaseItem = async (req, res) => {
       item,
       createdBy,
       billAvailable,
+      page,
+      limit,
     } = req.query;
     if (!groupId) {
       return res.status(CODE.NOT_FOUND).send({ message: MESSAGE.INVALID_ARGS });
@@ -75,11 +78,17 @@ exports.getAllPurchaseItem = async (req, res) => {
       is_active: true,
       users: { $in: [req.user._id] },
     };
+
+    let string = {};
     if (purchaseStartDate) {
-      filter.purchased_on = `$gte: ${new Date(purchaseStartDate)}`;
+      string.$gte = new Date(purchaseStartDate);
     }
+
     if (purhcaseEndDate) {
-      filter.purchased_on = `$lte: ${new Date(purhcaseEndDate)}`;
+      string.$lte = new Date(purhcaseEndDate);
+    }
+    if (purchaseStartDate || purhcaseEndDate) {
+      filter.purchased_on = string;
     }
     if (item) {
       filter.name = mongoose.Types.ObjectId(item);
@@ -91,11 +100,19 @@ exports.getAllPurchaseItem = async (req, res) => {
       filter.bill_available = billAvailable;
     }
     if (!req.params.sortBy) {
-      sortBy = { created_on: 1 };
+      sortBy = { purchased_on: 1 };
     } else {
       sortBy = { sortBy: 1 };
     }
-    await PurchaseItemORM.getAllPurchaseItems(req, res, filter, sortBy);
+    const skip = (parseInt(page) - 1) * limit;
+    await PurchaseItemORM.getAllPurchaseItems(
+      req,
+      res,
+      filter,
+      sortBy,
+      skip,
+      limit
+    );
   } catch (error) {
     logger.error(error);
     return res
@@ -145,7 +162,7 @@ exports.updatePuchaseItem = async (req, res) => {
     if (totalCost) {
       updateData.totalCost = totalCost;
     }
-    if (billAvailable) {
+    if (billAvailable === true || billAvailable === false) {
       updateData.bill_available = billAvailable;
     }
     if (purchaseDate) {

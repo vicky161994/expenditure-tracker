@@ -8,5 +8,6 @@ router.get("/", verifyToken, GroupService.getAllGroup);
 router.get("/:groupId", verifyToken, GroupService.getGroupById);
 router.delete("/:groupId", verifyToken, GroupService.deleteGroup);
 router.post("/join-group", verifyToken, GroupService.joinGroup);
+router.post("/remove-group", verifyToken, GroupService.removeGroup);
 
 module.exports = router;
